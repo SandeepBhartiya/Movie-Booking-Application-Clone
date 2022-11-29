@@ -1,8 +1,8 @@
-const mongoose=require("mongoose");
+const mongoose=require('mongoose');
 const constants=require("../utils/constant.util");
 
 const movieSchema=new mongoose.Schema({
-    name:{
+    title:{
         type:String,
         required:true
     },
@@ -45,4 +45,4 @@ const movieSchema=new mongoose.Schema({
     }
 },{timestamps:true,versionKey:false});
 
-module.exports=mongoose.model("movie",movieSchema);
+module.exports=mongoose.model('movie',movieSchema);
