@@ -23,5 +23,11 @@ module.exports={
         pending:"PENDING",
         approved:"APPROVED",
         rejected:"REJECTED"
+    },
+    theatreShows:{
+        morning:"MORNING",
+        noon:"NOON",
+        evening:"EVENING",
+        night:"NIGHT"
     }
 }

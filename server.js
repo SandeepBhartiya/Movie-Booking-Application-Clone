@@ -1,10 +1,14 @@
 const app=require("express")();
 const bodyParser=require('body-parser')
 const mongoose=require("mongoose");
+const bcrypt=require('bcryptjs');
 
 const serverConfig=require("./configs/server.config")
 const dbConfig=require("./configs/db.config");
 const User=require("./models/user.model");
+const Movie=require("./models/movie.model");
+const constants=require("./utils/constant.util");
+
 app.use(bodyParser.json())
 
 mongoose.connect(dbConfig.DB);
@@ -21,11 +25,31 @@ db.once("open",()=>{
 
 async function init()
 {
-    await User.collection.drop();
+    try
+    {
+
+        await User.collection.drop();
+        await Movie.collection.drop();  
+
+        const user=await User.create({
+            name:"Sandeep",
+            userId:"sam1",
+            password:bcrypt.hashSync("Sej9833029799@"),
+            email:"Sandeep@gmail.com",
+            userType:constants.userType.admin,
+            userStatus:constants.userStatus.approved
+        })
+        console.log(user)
+    }
+    catch(err)
+    {
+        console.log("### Error while performing db operation ####",err.message)
+    }
 }
 // const db=dbConfig.connection
-require("./routes/auth.routes")(app)
-require("./routes/movie.route")(app)
+require("./routes/auth.routes")(app);
+require("./routes/movie.route")(app);
+require("./routes/theatre.routes")(app);
 
 app.listen(serverConfig.PORT,()=>{
     console.log("listening at ",serverConfig.PORT)

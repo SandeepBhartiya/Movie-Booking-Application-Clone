@@ -10,9 +10,9 @@ exports.signUp=async(req,res)=>{
     const userObj={
         name:req.body.name,
         userId:req.body.userId,
-        userId:req.body.userId,
-        password:bcrypt.hashSync(req.body.password, 8),
+        password:bcrypt.hashSync(req.body.password,8),
         email:req.body.email,
+        userType:req.body.userType,
         userStatus:req.body.userType==constants.userType.customer?constants.userStatus.approved:constants.userStatus.pending
     }
     try
@@ -33,23 +33,12 @@ exports.signUp=async(req,res)=>{
 exports.signIn=async(req,res)=>{
     try
     {
-        const user=await User.findOne({userId:req.body.userId});
-      
-
-
-        const passwordIsvalid=bcrypt.compareSync(req.body.password, user.password)
-        if(!passwordIsvalid)
-        {
-            return res.status(401).send({
-                message:"Incorrect Password is provided"
-            });
-        }
-
-        const accessToken=jwt.sign({id:req.userId},secret.secretKey,{
+        const user=req.userId;
+        const accessToken=jwt.sign({id:user.userId},secret.secretKey,{
             expiresIn:secret.ACCESS_TOKEN
         });
 
-        const refreshToken=jwt.sign({id:req.userId},secret.secretKey,{
+        const refreshToken=jwt.sign({id:user.userId},secret.secretKey,{
             expiresIn:secret.REFERESH_TOKEN
         });
      

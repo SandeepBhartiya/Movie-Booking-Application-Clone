@@ -10,8 +10,8 @@ const userSchema=new mongoose.Schema({
     userId:{
         type:String,
         required:true,
-        trim:true,
-        unique:true
+        unique:true,
+        trim:true
     },
     password:{
         type:String,
@@ -55,4 +55,4 @@ const userSchema=new mongoose.Schema({
     }
 },{timestamps:true,versionKey:false});
 
-module.exports=mongoose.model("user",userSchema);
+module.exports=mongoose.model("User",userSchema);

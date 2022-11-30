@@ -1,9 +1,9 @@
 const validateMovieReq=require("./validateMovieReqBodies")
 const validateUser=require("./validateUserReqBodies")
-const validateIdInParams=require("./paramsVerifier")
+const validateInParams=require("./paramsVerifier")
 const authJwt=require("./auth")
 module.exports={
-    validateIdInParams,
+    validateInParams,
     validateMovieReq,
     validateUser,
     authJwt

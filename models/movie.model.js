@@ -42,7 +42,17 @@ const movieSchema=new mongoose.Schema({
         type:[String],
         default:constants.genre.action,
         enum:[constants.genre.action,constants.genre.comedy,constants.genre.drama,constants.genre.fantasy,constants.genre.horror,constants.genre.mystery,constants.genre.romance,constants.genre.thriller]
+    },
+    theatres:{
+        type:[mongoose.SchemaTypes.ObjectId],
+        ref:"Theatre",
+        required:true
+    },
+    bookings:{
+        type:[mongoose.SchemaTypes.ObjectId],
+        ref:"",
+        required:true
     }
 },{timestamps:true,versionKey:false});
 
-module.exports=mongoose.model('movie',movieSchema);
+module.exports=mongoose.model('Movie',movieSchema);

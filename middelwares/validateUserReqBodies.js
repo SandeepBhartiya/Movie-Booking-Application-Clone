@@ -1,3 +1,6 @@
+const jwt=require('jsonwebtoken');
+
+const  authConfig=require("../configs/secretKey.config");
 const User=require("../models/user.model");
 const constants=require("../utils/constant.util");
 
@@ -103,9 +106,12 @@ const signInBody=async(req,res,next)=>{
     next();
 }
 
+
+
 const validateUser={
     signUpBody:signUpBody,
-    signInBody:signInBody
+    signInBody:signInBody,
+    
 }
 
 module.exports=validateUser

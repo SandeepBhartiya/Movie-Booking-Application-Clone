@@ -1,5 +1,9 @@
+const jwt=require('jsonwebtoken');
+
 const Movie=require("../models/movie.model")
 const User=require("../models/user.model")
+const authConfig=require("../configs/secretKey.config");
+
 const movieInParams=async(req,res,next)=>{
     try
     {
@@ -45,9 +49,30 @@ const userInParams=async(req,res,next)=>{
     }
 }
 
-const validateIdInParams={
+const verifyRefrehToken=async(req,res,next)=>{
+    const token=req.headers["x-refresh-token"];
+    jwt.verify(token,authConfig.secretKey,async (err,decoded)=>{
+        if(err)
+        {
+            return res.status(401).send({
+                message:"UnAuthorised!"
+            })
+        }
+        const user =await User.findOne({userId:decoded.id});
+        if(!user)
+        {
+            return res.status(400).send({
+                message:"The user that this token belongs to does not exist"
+            })
+        }
+        req.user=user
+        next();
+    })
+}
+const validateInParams={
     movieInParams:movieInParams,
-    userInParams:userInParams
+    userInParams:userInParams,
+    verifyRefrehToken:verifyRefrehToken
 }
 
-module.exports=validateIdInParams
+module.exports=validateInParams
