@@ -1,6 +1,7 @@
 const { movieInParams } = require("../middelwares/paramsVerifier");
 const { updateMany } = require("../models/movie.model");
 const Movie=require("../models/movie.model");
+const Theatre=require("../models/theatre.model");
 const objectConverter=require("../utils/objectConverter")
 exports.createMovie=async(req,res)=>{
     try
@@ -62,6 +63,16 @@ exports.deleteMovie=async(req,res)=>{
     try
     {
         const movie=req.movieInParams; //need ffuture update for theather
+
+        if(movie.theatres.length>0)
+        {
+            for(e of movie.theatres)
+            {
+                const theatre=await Theatre.findOne({_id:e})
+                await theatre.movies.remove(movie._id);
+                theatre.save();
+            }
+        }
         res.status(200).send({
             message:"Movie deleted successfully "
         })
@@ -94,7 +105,7 @@ exports.getAllMovies=async(req,res)=>{
 exports.getMovie=async(req,res)=>{
     try
     {
-        const movie=req.movieInParams;
+        const movie=req.userInParams;
         res.status(200).send(movie)
     }
     catch(err)

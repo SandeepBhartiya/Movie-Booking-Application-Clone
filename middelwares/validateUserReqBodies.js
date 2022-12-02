@@ -5,7 +5,7 @@ const User=require("../models/user.model");
 const constants=require("../utils/constant.util");
 
 const AllowedUserType=[constants.userType.admin,constants.userType.customer,constants.userType.theatre_owner];
-
+const AllowedUserStatus=[constants.userStatus.approved,constants.userStatus.pending,constants.userStatus.rejected];
 
 const isValidEmail=(checkEmail)=>{
     return String(checkEmail).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -106,12 +106,42 @@ const signInBody=async(req,res,next)=>{
     next();
 }
 
+const userUpdateBody=async(req,res,next)=>{
+    
+    if(req.body.password && !isValidPassword(req.body.password))
+    {
+        return res.status(400).send({
+            message:"Failed!!! Not a valid Password.password must be 10 to 20 characters with at least one lower case  letter,one upper case letter ,one numeric digit and one special character"
+        });
+    }
 
+    if(req.body.email && !isValidEmail(req.body.email))
+    {
+        return res.status(400).send({
+            message:"Failed!!!Not a valid Email Id"
+        });
+    }
+    
+    if(req.body.userType && !AllowedUserType.includes(req.body.userType))
+    {
+        return res.status(400).send({
+            message:"Failed!!! Invalid UserType is Provided"
+        });
+    }
+
+    if(req.body.userStatus && !AllowedUserStatus.includes(req.body.userStatus))
+    {
+        return res.status(400).send({
+            message:"Failed!!! Invalid UserStatus is Provided"
+        });
+    }
+    next();
+}
 
 const validateUser={
     signUpBody:signUpBody,
     signInBody:signInBody,
-    
+    userUpdateBody:userUpdateBody
 }
 
 module.exports=validateUser

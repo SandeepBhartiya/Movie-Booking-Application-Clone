@@ -3,7 +3,8 @@ const bcrypt=require('bcryptjs');
 
 const User=require("../models/user.model");
 const Movie=require("../models/movie.model");
-const constants=require("../utils/constant.util")
+const Theatre=require("../models/theatre.model");
+const constants=require("../utils/constant.util");
 const authConfig=require("../configs/secretKey.config");
 
 
@@ -24,6 +25,12 @@ const verifyToken=async(req,res,next)=>{
             });
         }
         const user=await User.findOne({userId:decoded.id});
+        if(!user)
+        {
+            return res.status(400).send({
+                message:"the user that this token belongs to does not exist"
+            })
+        }
         req.user=user
         next();
     })
@@ -43,6 +50,36 @@ const isAdmin=async(req,res,next)=>{
         })
     }
 }
+
+const isAdminorOwner=async(req,res,next)=>{
+    try
+    {    
+        const user=req.user;
+        console.log("USERS",user,req.params.id,user.user)
+        if(user.userType==constants.userType.admin ||user.userId==req.params.id)
+        {
+            next();
+        }
+        else
+        {
+            return res.status(400).send({
+                message:"Failed!!!! Only Admin and Owner is allowed to access this endpoint"
+            })
+        }
+    }
+    catch(err)
+    {
+        console.log("#### Error while reading user data ####")
+        return res.status(500).send({
+            message:"Internal server error while while reading user data"
+            })
+    }
+}
+
+
+
+
+
 
 const isTheatreOrAdmin=async(req,res,next)=>
 {
@@ -67,6 +104,32 @@ const isTheatreOrAdmin=async(req,res,next)=>
     }
 }
 
+const isValidTheaterOwner=async(req,res,next)=>{
+    try
+    {  
+        if(req.user.userType==constants.userType.theatre_owner)
+        {
+            const theatre=req.theatreInParams;
+            if(theatre.ownerId.equals(req.user._id))
+            {
+                next();
+            }
+            else
+            {
+                return res.status(403).send({
+                    message:"only valid theatre allowed to access this endpoint"
+                })
+            }
+        }
+    }
+    catch(err)
+    {
+        console.log("#### Internal server error while validation theatre Owner ####",err.message);
+            return res.status(500).send({
+                message:"Internal server error while validation theatre Owner"
+            })
+    }
+}
 
 //Check wether user Exist or Not
 const isUserExist=async(req,res,next)=>{
@@ -184,7 +247,9 @@ const isTitleUnique=async(req,res,next)=>{
 const authJwt={
     verifyToken:verifyToken,
     isAdmin:isAdmin,
+    isAdminorOwner:isAdminorOwner,
     isTheatreOrAdmin:isTheatreOrAdmin,
+    isValidTheaterOwner:isValidTheaterOwner,
     isPasswordValid:isPasswordValid,
     isUserExist:isUserExist,
     isUserUnique:isUserUnique,

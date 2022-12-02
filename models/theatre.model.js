@@ -4,8 +4,8 @@ const constants=require("../utils/constant.util");
 const theatreSchema=new mongoose.Schema({
     ownerId:{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:"User"
-        // required:true
+        ref:"User",
+        required:true
     },
     name:{
         type:String,
@@ -34,8 +34,8 @@ const theatreSchema=new mongoose.Schema({
     },
     movies:{
         type:[mongoose.SchemaTypes.ObjectId],
-        ref:"Movie",
-        default:[]
+        default:[],
+        ref:"Movie"
     },
     ticketPrice:{
         type:Number,

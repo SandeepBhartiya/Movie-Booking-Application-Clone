@@ -1,7 +1,8 @@
 const jwt=require('jsonwebtoken');
 
-const Movie=require("../models/movie.model")
-const User=require("../models/user.model")
+const Movie=require("../models/movie.model");
+const User=require("../models/user.model");
+const Theatre=require("../models/theatre.model");
 const authConfig=require("../configs/secretKey.config");
 
 const movieInParams=async(req,res,next)=>{
@@ -30,14 +31,36 @@ const movieInParams=async(req,res,next)=>{
 const userInParams=async(req,res,next)=>{
     try
     {
-        const user=await User.findOne({_id:req.params.id});
+        const user=await User.findOne({userId:req.params.id});
         if(!user)
         {
             return res.status(400).send({
                 message:"Failed!!!User does not Exist "
             })
         }
-        req.userId=user;
+        req.userInParams=user;
+        next();
+    }
+    catch(err)
+    {
+        console.log("#### Error while reading user info ####")
+        return res.status(500).send({
+            message:"Internal server error while reading User info"
+        })
+    }
+}
+
+const theatreInParams=async(req,res,next)=>{
+    try
+    {
+        const theatre=await Theatre.findOne({_id:req.params.id});
+        if(!theatre)
+        {
+            return res.status(400).send({
+                message:"Failed!!!Theatre does not Exist "
+            })
+        }
+        req.theatreInParams=theatre;
         next();
     }
     catch(err)
@@ -72,6 +95,7 @@ const verifyRefrehToken=async(req,res,next)=>{
 const validateInParams={
     movieInParams:movieInParams,
     userInParams:userInParams,
+    theatreInParams:theatreInParams,
     verifyRefrehToken:verifyRefrehToken
 }
 

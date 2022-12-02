@@ -55,4 +55,4 @@ const movieSchema=new mongoose.Schema({
     }
 },{timestamps:true,versionKey:false});
 
-module.exports=mongoose.model('Movie',movieSchema);
+module.exports=mongoose.model("Movie",movieSchema);
