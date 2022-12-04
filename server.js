@@ -34,8 +34,8 @@ async function init()
         // await Theatre.collection.drop();
 
         // const user=await User.create({
-        //     name:"Sandeep1",
-        //     userId:"sam12",
+        //     name:"Sandeep",
+        //     userId:"sam1",
         //     password:bcrypt.hashSync("Sej9833029799@"),
         //     email:"Sandeep1@gmail.com",
         //     userType:constants.userType.admin,
@@ -48,11 +48,12 @@ async function init()
         console.log("### Error while performing db operation ####",err.message)
     }
 }
-// const db=dbConfig.connection
+
 require("./routes/auth.routes")(app);
-require("./routes/movie.route")(app);
 require("./routes/theatre.routes")(app);
 require("./routes/user.routes")(app);
+require("./routes/booking.route")(app);
+require("./routes/movie.routes")(app);
 
 app.listen(serverConfig.PORT,()=>{
     console.log("listening at ",serverConfig.PORT)

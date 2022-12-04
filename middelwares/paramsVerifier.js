@@ -3,6 +3,7 @@ const jwt=require('jsonwebtoken');
 const Movie=require("../models/movie.model");
 const User=require("../models/user.model");
 const Theatre=require("../models/theatre.model");
+const Booking=require("../models/booking.model");
 const authConfig=require("../configs/secretKey.config");
 
 const movieInParams=async(req,res,next)=>{
@@ -72,6 +73,27 @@ const theatreInParams=async(req,res,next)=>{
     }
 }
 
+const bookingInParams=async(req,res,next)=>{
+    try
+    {
+        const booking=await Booking.findOne({_id:req.params.id});
+        if(!booking)
+        {
+            return res.status(400).send({
+                message:"Failed!!! BookingId  Provided is not Valid "
+            })
+        }
+        req.bookingInParams=booking;
+        next();
+    }
+    catch(err)
+    {
+        console.log("#### error while getting booking data ####",err.message)
+        res.status(500).send({
+            message:"Internal server error while getting booking data"
+        })
+    }
+}
 const verifyRefrehToken=async(req,res,next)=>{
     const token=req.headers["x-refresh-token"];
     jwt.verify(token,authConfig.secretKey,async (err,decoded)=>{
@@ -96,6 +118,7 @@ const validateInParams={
     movieInParams:movieInParams,
     userInParams:userInParams,
     theatreInParams:theatreInParams,
+    bookingInParams:bookingInParams,
     verifyRefrehToken:verifyRefrehToken
 }
 

@@ -29,5 +29,15 @@ module.exports={
         noon:"NOON",
         evening:"EVENING",
         night:"NIGHT"
+    },
+    status:{
+        inProgress:"INPROGRESS",
+        cancelled:"CANCELLED",
+        completed:"COMPLETED",
+        failed:"FAILED"
+    },
+    paymentStatus:{
+        failed:"FAILED",
+        success:"SUCCESS"
     }
 }

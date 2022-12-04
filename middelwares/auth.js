@@ -104,6 +104,29 @@ const isTheatreOrAdmin=async(req,res,next)=>
     }
 }
 
+const isAdminOrOwnerOfBooking=async(req,res,next)=>{
+    try
+    {
+        if(req.user.userType!=constants.userType.admin )
+        {
+            if(req.bookingInParams.userId.valueOf()!=req.user._id.valueOf())
+            {
+                return res.status(400).send({
+                    message:"Failed!!! Only the Admin or Owner of Booking   can access this endpoint"
+                })
+            }
+        }
+        next();
+    }
+    catch(err)
+    {
+        console.log("#### Error while  validating usertype is Admin or Owner of Booking ####",err.message);
+        return res.status(500).send({
+            message:"Internal server error"
+        })
+    }
+}
+
 const isValidTheaterOwner=async(req,res,next)=>{
     try
     {  
@@ -250,6 +273,7 @@ const authJwt={
     isAdminorOwner:isAdminorOwner,
     isTheatreOrAdmin:isTheatreOrAdmin,
     isValidTheaterOwner:isValidTheaterOwner,
+    isAdminOrOwnerOfBooking:isAdminOrOwnerOfBooking,
     isPasswordValid:isPasswordValid,
     isUserExist:isUserExist,
     isUserUnique:isUserUnique,

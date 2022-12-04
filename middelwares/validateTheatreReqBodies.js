@@ -225,20 +225,18 @@ const editMovieInTheaterBody=async(req,res,next)=>{
 
     try
     { 
-        console.log("1");
         const movieIntheater=req.theatreInParams.movies.map(e=>
             e.toString()
         );
-        console.log("2",movieIntheater);
         if(req.body.addMovies)
         {
-            req.body.addMovies=req.body.addMovies.filter(movieId=> !movieIntheater.includes(movieId));
             if(!Array.isArray(req.body.addMovies))
             {
                 return res.status(400).send({
                     message:"Failed!!! Movie id in addMovies are not in correct formate (Array)"
                 });
             }
+            req.body.addMovies=req.body.addMovies.filter(movieId=> !movieIntheater.includes(movieId));
             const check=await checkValidObjectIds(req.body.addMovies);
             if(!check.validIds)
             {
@@ -256,18 +254,14 @@ const editMovieInTheaterBody=async(req,res,next)=>{
 
         if(req.body.removeMovies)
         {
-            console.log("2.1");
-            req.body.removeMovies=req.body.removeMovies.filter(movieId=>movieIntheater.includes(movieId));
-            console.log("2.2",req.body.removeMovies);
             if(!Array.isArray(req.body.removeMovies))
             {
                 return res.status(400).send({
                     message:"Failed!!! Movie id in removeMovies are not in correct formate (Array)"
                 });
             }
-            console.log("2.3");
+            req.body.removeMovies=req.body.removeMovies.filter(movieId=>movieIntheater.includes(movieId));
             const check=await checkValidObjectIds(req.body.removeMovies);
-            console.log("2.4",check);
             if(!check.validIds)
             {
                 return res.status(400).send({
@@ -280,7 +274,6 @@ const editMovieInTheaterBody=async(req,res,next)=>{
                     message:"Failed!!! MovieId provided in removeMovies does not exist"
                 })
             }
-            console.log("2.5");
         }
         next();
     }
