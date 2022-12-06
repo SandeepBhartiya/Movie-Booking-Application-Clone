@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const constants=require("../utils/constant.util");
+const {theatreShows}=require("../utils/constant");
 
 const theatreSchema=new mongoose.Schema({
     ownerId:{
@@ -26,7 +26,7 @@ const theatreSchema=new mongoose.Schema({
     showTypes:{
         type:[String],
         required:true,
-        enum:[constants.theatreShows.evening,constants.theatreShows.morning,constants.theatreShows.noon,constants.theatreShows.night]
+        enum:[theatreShows.evening,theatreShows.morning,theatreShows.noon,theatreShows.night]
     },
     numberOfSeats:{
         type:Number,

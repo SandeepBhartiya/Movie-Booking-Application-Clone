@@ -1,7 +1,7 @@
 const bcrypt=require('bcryptjs')
 
 const User=require("../models/user.model");
-const constant=require("../utils/constant.util")
+const {userType}=require("../utils/constant")
 exports.findAllUser=async(req,res)=>{
     const queryObj={}
     const userTypeQP=req.query.userType;
@@ -57,7 +57,7 @@ exports.updateUser=async(req,res)=>{
         user.password=req.body.password?bcrypt.hashSync(req.body.password):user.password
         user.email=req.body.email?req.body.email:user.email;
 
-        if(req.user.userType==constant.userType.admin)
+        if(req.user.userType==userType.admin)
         {
             user.userType=req.body.userType?req.body.userType:user.userType;
             user.userStatus=req.body.userStatus?req.body.userStatus:user.userStatus;

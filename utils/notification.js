@@ -18,8 +18,8 @@ module.exports=(subject,content,recepients,requester)=>{
     }
 
     const args={
-        reqBody,
-        reqHeader
+       data:reqBody,
+        headers:reqHeader
     }
 
     try

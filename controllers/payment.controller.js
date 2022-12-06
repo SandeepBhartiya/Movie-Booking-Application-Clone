@@ -1,12 +1,12 @@
 const Payment=require("../models/payment.models");
-const constant=require("../utils/constant.util");
+const {userType,paymentStatus,status}=require("../utils/constant");
 const sendNotificationReq=require("../utils/sendEmailRequest");
 
 exports.getAllPayments=async(req,res)=>{
     try{
         let queryObj={};
 
-        if(req.user.userType!=constant.userType.admin)
+        if(req.user.userType!=userType.admin)
         {
             queryObj._id=req.user.myPayments;
         }
@@ -50,14 +50,14 @@ exports.createPayment=async(req,res)=>{
         }
 
         const payment=await Payment.create(paymentObj);
-        if(payment.status==constant.paymentStatus.success)
+        if(payment.status==paymentStatus.success)
         {
-            req.booking.status=constant.status.completed,
+            req.booking.status=status.completed,
             sendNotificationReq.successfulTicketPayment(req.user.email,payment);
         }
         else
         {
-            req.booking.status=constant.status.failed,
+            req.booking.status=status.failed,
             sendNotificationReq.failedTicketPayment(req.user.email,payment);
         }
         await req.booking.save();

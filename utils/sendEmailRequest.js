@@ -23,7 +23,7 @@ exports.failedTicketPayment=(userEmail,payment)=>{
 exports.bookingCancelled=(userEmail,payment)=>{
     sendEmail(
         `Movie Booking Payment Cancelled`,
-        `The Payment of Movie booking for amount ${payment.amount} has been Cancelled`,
+        `The Payment of Movie booking for amount ${payment.amount} has been Cancelled at your Request.`,
         `${userEmail}`,
         `Movie Booking App`
     );

@@ -2,13 +2,16 @@ const Booking=require("../models/booking.model");
 const Movie=require("../models/movie.model");
 const Theatre=require("../models/theatre.model");
 const User=require("../models/user.model");
-const constant=require("../utils/constant.util");
+
+const sendNotificationReq=require("../utils/sendEmailRequest")
+const {userType,status}=require("../utils/constant");
+const checker=require("../utils/check");
 
 exports.getAllbookings=async(req,res)=>{
     try
     {
         const query={};
-        if(req.body.userType!=constant.userType.admin)
+        if(req.body.userType!=userType.admin)
         {
             query.userId=req.user._id;
         }
@@ -65,6 +68,7 @@ exports.initiateBooking=async(req,res)=>{
         // await req.bookedTheatre.save();
 
         res.status(201).send(booking);
+        checker.checkBookingStatus(booking._id,req.user);
 
     }catch(err)
     {
@@ -76,7 +80,6 @@ exports.initiateBooking=async(req,res)=>{
 }
 
 exports.updateBookingDetails=async(req,res)=>{
-    // const booking=await Booking.findOne({_id:req.params.id});
     try
     {
         req.bookingInParams.theatreId=req.body.theatreId!=undefined?req.body.theatreId:req.bookingInParams.theatreId;
@@ -84,15 +87,15 @@ exports.updateBookingDetails=async(req,res)=>{
         req.bookingInParams.noOfSeats=req.body.noOfSeats!=undefined?req.body.noOfSeats:req.bookingInParams.noOfSeats;
         req.bookingInParams.status=req.body.status!=undefined?req.body.status:req.bookingInParams.status;
         req.bookingInParams.totalCoast=req.body.totalCoast!=undefined?(req.bookedTheatre.ticketPrice*req.body.noOfSeats):req.bookingInParams.totalCoast;
-        console.log("book",req.bookedTheatre.ticketPrice,req.body.noOfSeats)
         const updatebooking=await req.bookingInParams.save();
 
-        // if(updatebooking.status==constant.status.cancelled)
-        // {
-        //     sendNotificationReq.bookingCancelled(req.user.email);
-        // }
+        if(updatebooking.status==status.cancelled)
+        {
+            sendNotificationReq.bookingCancelled(req.user.email);
+        }
         return res.status(200).send(updatebooking)
-    }catch(err)
+    }
+    catch(err)
     {
         console.log("####  error while updating booking details ####",err.message)
         return res.status(500).send({

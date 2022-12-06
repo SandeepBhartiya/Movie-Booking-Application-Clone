@@ -2,13 +2,13 @@
 const Theatre=require("../models/theatre.model")
 const Movie=require("../models/movie.model")
 const User=require("../models/user.model")
-const constants=require("../utils/constant.util");
+const {userType}=require("../utils/constant");
 
 
 exports.createNewTheatre=async(req,res)=>{
 
     const theatreObj={
-        ownerId: req.user.userType==constants.userType.admin? req.body.ownerId:req.user._id, 
+        ownerId: req.user.userType==userType.admin? req.body.ownerId:req.user._id, 
         name:req.body.name,
         description:req.body.description,
         city:req.body.city,

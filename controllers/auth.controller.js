@@ -3,7 +3,7 @@ const jwt=require('jsonwebtoken');
 
 const User=require("../models/user.model");
 const secret=require("../configs/secretKey.config");
-const constants=require("../utils/constant.util");
+const {userType,userStatus}=require("../utils/constant");
 
 
 exports.signUp=async(req,res)=>{
@@ -13,11 +13,12 @@ exports.signUp=async(req,res)=>{
         password:bcrypt.hashSync(req.body.password,8),
         email:req.body.email,
         userType:req.body.userType,
-        userStatus:req.body.userType==constants.userType.customer?constants.userStatus.approved:constants.userStatus.pending
+        userStatus:req.body.userType==userType.customer?userStatus.approved:userStatus.pending
     }
     try
     {
         const newUser=await User.create(userObj);
+        console.log("#### New User Successfully singUp ####")
         res.status(201).send(newUser)
     }
     catch(err)
@@ -64,6 +65,7 @@ exports.signIn=async(req,res)=>{
 }
 
 exports.refreshAccessToken=async (req,res)=>{
+
     const accessToken=jwt.sign({id:req.user.userId},secret.secretKey,{
         expiresIn:secret.ACCESS_TOKEN
     });

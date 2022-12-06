@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const {status}=require('../utils/constant.util');
+const {status}=require('../utils/constant');
 
 const bookingSchema=new mongoose.Schema({
     totalCoast:{

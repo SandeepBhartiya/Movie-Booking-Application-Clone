@@ -1,9 +1,9 @@
 const User=require("../models/user.model");
-const constants=require("../utils/constant.util");
+const {theatreShows,userType}=require("../utils/constant");
 const Movie=require("../models/movie.model")
 const ObjectId=require('mongoose').Types.ObjectId;
 
-const AllowedShowTypes=[constants.theatreShows.evening,constants.theatreShows.morning,constants.theatreShows.night,constants.theatreShows.noon];
+const AllowedShowTypes=[theatreShows.evening,theatreShows.morning,theatreShows.night,theatreShows.noon];
 
 function isValidObjectId(id)
 {
@@ -52,7 +52,7 @@ function checkShowType(e)
 const newTheatreBody=async(req,res,next)=>{
     try
     {
-        if(req.user.userType==constants.userType.admin && !req.body.ownerId)
+        if(req.user.userType==userType.admin && !req.body.ownerId)
         {
             return res.status(400).send({
                 message:"Failed!!! Theatre owner Id is not provided"
@@ -76,7 +76,7 @@ const newTheatreBody=async(req,res,next)=>{
                         message:"Failed!!! Theater owner id provided does not exist"
                     })
                 }
-                else if(owner.userType!=constants.userType.theatre_owner)
+                else if(owner.userType!=userType.theatre_owner)
                 {
                     return res.status(400).send({
                         message:"Failed!!!  Owner id provided is not a theatre owner "

@@ -2,10 +2,10 @@ const jwt=require('jsonwebtoken');
 
 const  authConfig=require("../configs/secretKey.config");
 const User=require("../models/user.model");
-const constants=require("../utils/constant.util");
+const {userType,userStatus}=require("../utils/constant");
 
-const AllowedUserType=[constants.userType.admin,constants.userType.customer,constants.userType.theatre_owner];
-const AllowedUserStatus=[constants.userStatus.approved,constants.userStatus.pending,constants.userStatus.rejected];
+const AllowedUserType=[userType.admin,userType.customer,userType.theatre_owner];
+const AllowedUserStatus=[userStatus.approved,userStatus.pending,userStatus.rejected];
 
 const isValidEmail=(checkEmail)=>{
     return String(checkEmail).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -64,7 +64,7 @@ const signUpBody=async(req,res,next)=>{
                 message:"Failed!!! userType is not Provided"
             })
         }
-        else if(req.body.userType==constants.userType.admin)
+        else if(req.body.userType==userType.admin)
         {
             return res.status(400).send({
                 message:"Failed!!! userType cannot be Admin"

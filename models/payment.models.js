@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const {paymentStatus}=require("../utils/constant.util");
+const {paymentStatus}=require("../utils/constant");
 
 const paymentSchema=new mongoose.Schema({
 

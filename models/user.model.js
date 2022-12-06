@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const {userType,userStatus}=require("../utils/constant.util")
+const {userType,userStatus}=require("../utils/constant")
 
 const userSchema=new mongoose.Schema({
     name:{

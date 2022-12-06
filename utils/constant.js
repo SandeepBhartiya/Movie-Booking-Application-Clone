@@ -14,6 +14,12 @@ module.exports={
         romance:"ROMANCE",
         thriller:"THRILLER"
     },
+    theatreShows:{
+        morning:"MORNING",
+        noon:"NOON",
+        evening:"EVENING",
+        night:"NIGHT"
+    },
     userType:{
         customer:"CUSTOMER",
         admin:"ADMIN",
@@ -23,12 +29,6 @@ module.exports={
         pending:"PENDING",
         approved:"APPROVED",
         rejected:"REJECTED"
-    },
-    theatreShows:{
-        morning:"MORNING",
-        noon:"NOON",
-        evening:"EVENING",
-        night:"NIGHT"
     },
     status:{
         inProgress:"INPROGRESS",

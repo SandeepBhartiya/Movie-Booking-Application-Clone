@@ -5,6 +5,7 @@ const User=require("../models/user.model");
 const Theatre=require("../models/theatre.model");
 const Booking=require("../models/booking.model");
 const authConfig=require("../configs/secretKey.config");
+const Payment=require("../models/payment.models");
 
 const movieInParams=async(req,res,next)=>{
     try
@@ -94,6 +95,27 @@ const bookingInParams=async(req,res,next)=>{
         })
     }
 }
+const paymentInParams=async (req,res,next)=>{
+    try
+    {
+        const payment=await Payment.findOne({_id:req.params.id});
+        if(!payment)
+        {
+            return res.status(400).send({
+                message:"Failed!!! Payment Id passed doesn't exist"
+            })
+        }
+        req.paymentInParams=payment
+        next();
+    }
+    catch(err)
+    {
+        console.log("#### Error while reading the payment data ####",err.message);
+        return res.status(500).send({
+            message:"Internal server error while reading the payment data"
+        })
+    }
+}
 const verifyRefrehToken=async(req,res,next)=>{
     const token=req.headers["x-refresh-token"];
     jwt.verify(token,authConfig.secretKey,async (err,decoded)=>{
@@ -115,10 +137,11 @@ const verifyRefrehToken=async(req,res,next)=>{
     })
 }
 const validateInParams={
-    movieInParams:movieInParams,
     userInParams:userInParams,
+    movieInParams:movieInParams,
     theatreInParams:theatreInParams,
     bookingInParams:bookingInParams,
+    paymentInParams:paymentInParams,
     verifyRefrehToken:verifyRefrehToken
 }
 

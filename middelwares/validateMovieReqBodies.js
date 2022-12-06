@@ -1,11 +1,11 @@
-const constants=require("../utils/constant.util");
+const {releaseStatus,genre}=require("../utils/constant");
 
 const isDate=(date=>{
     return (new Date(date)!="Invalid Date") && !isNaN(new Date(date));
 });
 
-const AllowedReleaseStatus=[constants.releaseStatus.blocked,constants.releaseStatus.coming_soon,constants.releaseStatus.released];
-const AllowedMovieGenre=[constants.genre.action,constants.genre.comedy,constants.genre.drama,constants.genre.fantasy,constants.genre.horror,constants.genre.mystery,constants.genre.romance,constants.genre.thriller];
+const AllowedReleaseStatus=[releaseStatus.blocked,releaseStatus.coming_soon,releaseStatus.released];
+const AllowedMovieGenre=[genre.action,genre.comedy,genre.drama,genre.fantasy,genre.horror,genre.mystery,genre.romance,genre.thriller];
 
 function checkGenre(genre)
 {

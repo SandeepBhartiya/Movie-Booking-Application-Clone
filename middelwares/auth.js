@@ -4,7 +4,7 @@ const bcrypt=require('bcryptjs');
 const User=require("../models/user.model");
 const Movie=require("../models/movie.model");
 const Theatre=require("../models/theatre.model");
-const constants=require("../utils/constant.util");
+const {userType}=require("../utils/constant");
 const authConfig=require("../configs/secretKey.config");
 
 
@@ -40,7 +40,7 @@ const verifyToken=async(req,res,next)=>{
 const isAdmin=async(req,res,next)=>{
     const user=req.user;
    
-    if(user && user.userType==constants.userType.admin)
+    if(user && user.userType==userType.admin)
     {
         next();
     }else
@@ -56,7 +56,7 @@ const isAdminorOwner=async(req,res,next)=>{
     {    
         const user=req.user;
         console.log("USERS",user,req.params.id,user.user)
-        if(user.userType==constants.userType.admin ||user.userId==req.params.id)
+        if(user.userType==userType.admin ||user.userId==req.params.id)
         {
             next();
         }
@@ -85,7 +85,7 @@ const isTheatreOrAdmin=async(req,res,next)=>
 {
     try
     {
-        const allowedUserTypes=[constants.userType.admin,constants.userType.theatre_owner]
+        const allowedUserTypes=[userType.admin,userType.theatre_owner]
         if(allowedUserTypes.includes(req.user.userType))
         {
             next();
@@ -107,7 +107,7 @@ const isTheatreOrAdmin=async(req,res,next)=>
 const isAdminOrOwnerOfBooking=async(req,res,next)=>{
     try
     {
-        if(req.user.userType!=constants.userType.admin )
+        if(req.user.userType!=userType.admin )
         {
             if(req.bookingInParams.userId.valueOf()!=req.user._id.valueOf())
             {
@@ -126,11 +126,29 @@ const isAdminOrOwnerOfBooking=async(req,res,next)=>{
         })
     }
 }
-
+const isAdminorOwnerofPayment=async(req,res,next)=>{
+    try
+    {
+        if(req.user.userType!=userType.admin && !req.user.myPayments.includes(req.params.id))
+        {
+             return res.status(400).send({   
+                 message:"Only the owner of the payments/admin can access this end point"
+             });
+        }
+        next();
+    }
+    catch(err)
+    {
+        console.log("#### errro while validating if usesType is admin/ownerOfPayment ####",err.message);
+        return res.status(500).send({
+            message:"Internal server error while validating if userType is admin/ownerOfPayment"
+        });
+    }
+}
 const isValidTheaterOwner=async(req,res,next)=>{
     try
     {  
-        if(req.user.userType==constants.userType.theatre_owner)
+        if(req.user.userType==userType.theatre_owner)
         {
             const theatre=req.theatreInParams;
             if(theatre.ownerId.equals(req.user._id))
@@ -229,7 +247,6 @@ const isEmailUnique=async(req,res,next)=>{
     try
     {
         const user=await User.findOne({email:req.body.email});      
-        console.log(user)
         if(user)
         {
             return res.status(401).send({
@@ -274,6 +291,7 @@ const authJwt={
     isTheatreOrAdmin:isTheatreOrAdmin,
     isValidTheaterOwner:isValidTheaterOwner,
     isAdminOrOwnerOfBooking:isAdminOrOwnerOfBooking,
+    isAdminorOwnerofPayment:isAdminorOwnerofPayment,
     isPasswordValid:isPasswordValid,
     isUserExist:isUserExist,
     isUserUnique:isUserUnique,
